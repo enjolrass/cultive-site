@@ -110,17 +110,22 @@ const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
 (() => {
   const racine = document.getElementById("demo");
   if (!racine) return;
+  // Trois vraies questions publiées dans le jeu, choisies parce qu'elles ont
+  // leur image : la démo doit ressembler au jeu. Les explications reprennent mot
+  // pour mot une phrase de la banque — on ne reformule pas un fait.
   const QUESTIONS = [
-    { monde: "Histoire", image: "histoire-france", enonce: "Quelle est la devise de la République française ?",
-      juste: "Liberté, Égalité, Fraternité",
-      faux: ["Liberté, Égalité, Justice", "Un roi, une loi, une foi", "Liberté, Égalité, Charcuterie"],
-      explication: "Adoptée comme devise de l'État le 27 février 1848, elle est réaffirmée par l'article 2 de la Constitution de 1958." },
-    { monde: "Sciences", image: "sciences-vie-terre", enonce: "En quelle année le premier homme marche-t-il sur la Lune ?",
-      juste: "1969", faux: ["1965", "1971", "1974"],
-      explication: "Le premier pas a eu lieu le 21 juillet 1969 à 2 h 56, heure de Paris. Environ 450 millions de personnes l'ont suivi en direct." },
-    { monde: "Jeux vidéo", image: "culture-populaire", enonce: "Quelle créature de Minecraft explose quand elle s'approche du joueur ?",
-      juste: "le Creeper", faux: ["l'Enderman", "le Zombie", "le Squelette"],
-      explication: "Il est né d'une erreur de code : en fabriquant le cochon, son auteur a échangé la longueur et la hauteur du modèle — et l'a gardé." },
+    { monde: "Peinture", planete: "arts-visuels", enonce: "Qui a peint « La Jeune Fille à la perle » ?",
+      juste: "Johannes Vermeer", faux: ["Rembrandt", "Frans Hals", "Pieter de Hooch"],
+      image: "demo-vermeer", credit: "Johannes Vermeer, vers 1665 · domaine public",
+      explication: "Oublié pendant près de deux siècles, le tableau ressurgit en 1881 dans une vente publique à La Haye, où un collectionneur l'emporta pour à peine deux florins." },
+    { monde: "Géographie", planete: "geographie-monde", enonce: "Dans quel pays se trouve le Machu Picchu ?",
+      juste: "Pérou", faux: ["Bolivie", "Équateur", "Colombie"],
+      image: "demo-machu", credit: "Photo Martin St-Amant · CC BY-SA 3.0", lien: "https://commons.wikimedia.org/wiki/File:80_-_Machu_Picchu_-_Juin_2009_-_edit.jpg",
+      explication: "Bâti vers 1450 pour l'empereur inca Pachacútec, à plus de 2 400 mètres d'altitude, le site reste inconnu du monde occidental jusqu'en 1911." },
+    { monde: "Jeux vidéo", planete: "culture-populaire", enonce: "En quelle année sort la Game Boy au Japon ?",
+      juste: "1989", faux: ["1985", "1992", "1995"],
+      image: "demo-gameboy", credit: "Photo Evan-Amos · domaine public",
+      explication: "Sa console tient sur 4 piles AA, théoriquement au moins dix heures." },
   ];
   const BRAVO = ["Bravo !", "Excellent !", "Époustouflant !"];
   const $ = (s) => racine.querySelector(s);
@@ -141,7 +146,13 @@ const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const q = QUESTIONS[rang];
     $(".fin-demo").classList.remove("vue");
     $(".panneau").classList.remove("ouvert", "rate");
-    $(".monde-q").innerHTML = `<img src="images/planete-${q.image}.webp" alt="">${q.monde}`;
+    $(".monde-q").innerHTML = `<img src="images/planete-${q.planete}.webp" alt="">${q.monde}`;
+    const tuile = $(".tuile");
+    tuile.querySelector("img").src = `images/${q.image}.webp`;
+    tuile.querySelector("img").alt = "";
+    const credit = tuile.querySelector(".credit");
+    credit.textContent = q.credit;
+    if (q.lien) credit.href = q.lien; else credit.removeAttribute("href");
     $(".enonce").textContent = q.enonce;
     $(".progres i").style.width = `${(rang / QUESTIONS.length) * 100}%`;
     const liste = $(".choix"); liste.classList.remove("fige"); liste.innerHTML = "";
