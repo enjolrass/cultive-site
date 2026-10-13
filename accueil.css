@@ -1,0 +1,222 @@
+/* L'ACCUEIL DU SITE — la vitrine du jeu.
+   Julien, le 13/10/2026 : « il est tout vide et tout plat, fais quelque chose
+   qui pète à mort et qui fait de mon jeu un truc qui pèse dans le game ».
+   Tout ce qui bouge passe par transform et opacity : fluide sur un téléphone.
+   Tout s'arrête pour qui a demandé moins d'animations à son appareil. */
+
+body.accueil { background-attachment: scroll; overflow-x: hidden; }
+.accueil main.cadre { max-width: none; padding: 0; }
+.accueil .entete { position: absolute; top: 0; left: 0; right: 0; z-index: 20; max-width: 1180px; }
+.large { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+
+/* ——— 1. L'ouverture ——— */
+.ouverture { position: relative; min-height: 100vh; min-height: 100svh; display: flex; align-items: center; overflow: hidden; isolation: isolate; }
+#ciel { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; }
+.ouverture::after { content: ""; position: absolute; inset: auto 0 0 0; height: 30%; background: linear-gradient(transparent, var(--fond-bas)); z-index: -1; pointer-events: none; }
+.nebuleuse { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .55; z-index: -1; pointer-events: none; }
+.nebuleuse.a { width: 46vw; height: 46vw; right: -8vw; top: 4vh; background: radial-gradient(circle, rgba(238,106,167,.55), rgba(143,134,242,.25) 55%, transparent 70%); animation: derive 22s ease-in-out infinite alternate; }
+.nebuleuse.b { width: 38vw; height: 38vw; left: -12vw; bottom: 0; background: radial-gradient(circle, rgba(98,205,227,.40), transparent 70%); animation: derive 28s ease-in-out infinite alternate-reverse; }
+@keyframes derive { to { transform: translate(4vw, -3vh) scale(1.08); } }
+
+.ouverture .large { width: 100%; display: grid; grid-template-columns: 1.05fr 1fr; gap: 30px; align-items: center; padding-top: 110px; padding-bottom: 80px; }
+.titre-une { font: 600 clamp(44px, 7.4vw, 92px)/.98 "Fraunces", Georgia, serif; letter-spacing: -.02em; margin: 18px 0 22px; }
+.titre-une em { font-style: normal; background: linear-gradient(100deg, var(--portail), var(--cyan) 45%, var(--violet) 75%, var(--rose)); -webkit-background-clip: text; background-clip: text; color: transparent; background-size: 200% 100%; animation: irise 8s ease-in-out infinite alternate; }
+@keyframes irise { to { background-position: 100% 0; } }
+.ouverture .chapo { font-size: clamp(17px, 1.6vw, 20px); max-width: 44ch; }
+.actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+.essayer { display: inline-flex; align-items: center; gap: 10px; padding: 16px 26px; border-radius: 999px; background: var(--portail); color: var(--encre); font: 800 17px/1 "Bricolage", system-ui, sans-serif; text-decoration: none; box-shadow: 0 5px 0 #86C43F, 0 0 40px rgba(180,234,106,.35); transition: transform .15s; }
+.essayer:hover { color: var(--encre); transform: translateY(-2px); }
+.essayer:active { transform: translateY(3px); box-shadow: 0 2px 0 #86C43F; }
+.defiler { position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%); font: 600 11px/1 "Plex Mono", monospace; letter-spacing: .2em; color: var(--texte-doux); text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.defiler::after { content: ""; width: 1px; height: 34px; background: linear-gradient(var(--texte-doux), transparent); animation: goutte 1.8s ease-in-out infinite; transform-origin: top; }
+@keyframes goutte { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+
+/* Le système de l'ouverture : un astre, des planètes en orbite elliptique.
+   L'ellipse vient de deux balancements décalés d'un quart de tour. */
+.orrery { position: relative; aspect-ratio: 1; width: min(560px, 100%); justify-self: center; transition: transform .4s cubic-bezier(.2,.7,.2,1); }
+.orrery .astre { position: absolute; inset: 22%; animation: tourne 60s linear infinite; filter: drop-shadow(0 0 60px rgba(238,106,167,.45)); }
+.orrery .astre img { width: 100%; height: 100%; }
+@keyframes tourne { to { transform: rotate(360deg); } }
+.orrery .anneau { position: absolute; left: 50%; top: 50%; border: 1px dashed rgba(255,255,255,.16); border-radius: 50%; transform: translate(-50%, -50%) rotate(-14deg); }
+.orbe { position: absolute; left: 50%; top: 50%; width: 0; height: 0; animation: va-x var(--t) ease-in-out infinite alternate; animation-delay: var(--d); }
+.orbe > div { animation: va-y var(--t) ease-in-out infinite alternate, profondeur calc(var(--t) * 2) linear infinite; animation-delay: calc(var(--d) - var(--t) / 2), calc(var(--d) * 2 - var(--t) / 2); }
+.orbe img { display: block; width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2); animation: tourne 30s linear infinite; }
+@keyframes va-x { from { transform: translateX(calc(var(--rx) * -1)); } to { transform: translateX(var(--rx)); } }
+@keyframes va-y { from { transform: translateY(calc(var(--ry) * -1)) rotate(-14deg); } to { transform: translateY(var(--ry)) rotate(-14deg); } }
+@keyframes profondeur { 0%, 100% { scale: .78; z-index: 0; filter: brightness(.7); } 50% { scale: 1.1; z-index: 3; filter: brightness(1.05); } }
+.orrery .astre { z-index: 1; }
+.orbe { z-index: 2; }
+
+/* ——— 2. Le bandeau ——— */
+.bandeau { border-block: 1px solid var(--ligne); background: rgba(21,19,46,.6); overflow: hidden; padding: 16px 0; }
+.bandeau .piste { display: flex; gap: 34px; width: max-content; animation: defile 48s linear infinite; }
+.bandeau:hover .piste { animation-play-state: paused; }
+.bandeau span { display: inline-flex; align-items: center; gap: 12px; font: 600 14px/1 "Plex Mono", monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--texte); white-space: nowrap; }
+.bandeau img { width: 30px; height: 30px; }
+@keyframes defile { to { transform: translateX(-50%); } }
+
+/* ——— Les sections ——— */
+.bloc { padding: clamp(70px, 10vw, 130px) 0; position: relative; }
+.surtitre { font: 600 12px/1 "Plex Mono", monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--jaune); }
+.bloc h2 { font: 600 clamp(34px, 5vw, 60px)/1.02 "Fraunces", Georgia, serif; letter-spacing: -.015em; margin: 14px 0 16px; max-width: 18ch; }
+.bloc .intro { color: var(--texte-doux); font-size: 19px; max-width: 52ch; margin: 0 0 44px; }
+.apparait { opacity: 0; transform: translateY(34px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); transition-delay: var(--retard, 0s); }
+.apparait.vu { opacity: 1; transform: none; }
+
+/* ——— 3. La question jouable ——— */
+.jouer { display: grid; grid-template-columns: .9fr 1.1fr; gap: 50px; align-items: center; }
+.telephone { position: relative; width: min(380px, 100%); aspect-ratio: 9 / 18.5; justify-self: center; border-radius: 46px; padding: 12px; background: linear-gradient(145deg, #3a3670, #14122a 40%, #2b2858); box-shadow: 0 40px 90px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.08), 0 0 80px rgba(143,134,242,.25); }
+.ecran { position: relative; height: 100%; border-radius: 36px; overflow: hidden; background: linear-gradient(180deg, var(--fond-haut), var(--fond) 50%, var(--fond-bas)); display: flex; flex-direction: column; padding: 46px 18px 18px; }
+.ecran::before { content: ""; position: absolute; top: 12px; left: 50%; width: 92px; height: 26px; transform: translateX(-50%); background: #000; border-radius: 20px; }
+.haut-jeu { display: flex; align-items: center; gap: 10px; }
+.progres { flex: 1; height: 8px; border-radius: 8px; background: rgba(255,255,255,.1); overflow: hidden; }
+.progres i { display: block; height: 100%; width: 0; background: var(--portail); border-radius: 8px; transition: width .5s cubic-bezier(.2,.7,.2,1); }
+.chrono { position: relative; width: 38px; height: 38px; }
+.chrono svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.chrono circle { fill: none; stroke-width: 4; }
+.chrono .fond { stroke: rgba(255,255,255,.1); }
+.chrono .reste { stroke: var(--jaune); stroke-linecap: round; stroke-dasharray: 100; transition: stroke-dashoffset 1s linear, stroke .3s; }
+.chrono b { position: absolute; inset: 0; display: grid; place-items: center; font: 600 12px/1 "Plex Mono", monospace; }
+.serie { font: 600 11px/1 "Plex Mono", monospace; color: var(--jaune); min-width: 52px; text-align: right; }
+.monde-q { display: flex; align-items: center; gap: 10px; margin: 20px 0 6px; font: 600 11px/1 "Plex Mono", monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--texte-doux); }
+.monde-q img { width: 34px; height: 34px; }
+.enonce { font: 800 21px/1.22 "Bricolage", system-ui, sans-serif; margin: 6px 0 18px; min-height: 3.6em; }
+.choix { display: grid; gap: 10px; }
+.choix button { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 13px 14px; border-radius: 16px; background: rgba(33,30,68,.9); border: 1px solid var(--ligne); font: 600 15px/1.25 "Figtree", sans-serif; color: var(--texte); transition: transform .12s, background .2s, border-color .2s; }
+.choix button:hover { border-color: rgba(255,255,255,.3); }
+.choix button:active { transform: scale(.98); }
+.choix button:focus-visible { outline: 2px solid var(--portail); outline-offset: 2px; }
+.choix button b { flex: none; width: 28px; height: 28px; border-radius: 9px; display: grid; place-items: center; background: rgba(255,255,255,.08); font: 600 13px/1 "Plex Mono", monospace; }
+.choix button.juste { background: rgba(23,48,42,.95); border-color: var(--portail); }
+.choix button.juste b { background: var(--portail); color: var(--encre); }
+.choix button.choisi { background: rgba(51,24,47,.95); border-color: var(--rose); }
+.choix button.choisi b { background: var(--rose); color: var(--encre); }
+.choix.fige button { cursor: default; }
+.panneau { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px 18px 18px; border-radius: 26px 26px 0 0; background: #17302A; border-top: 1px solid rgba(180,234,106,.4); transform: translateY(105%); transition: transform .55s cubic-bezier(.2,.9,.25,1.12); }
+.panneau.rate { background: #33182F; border-top-color: rgba(238,106,167,.45); }
+.panneau.ouvert { transform: none; }
+.verdict { display: flex; align-items: center; gap: 10px; font: 600 26px/1.05 "Fraunces", Georgia, serif; }
+.verdict .pts { margin-left: auto; font: 600 13px/1 "Plex Mono", monospace; color: var(--jaune); }
+.reponse-dite { font-size: 14px; color: var(--texte-doux); margin: 6px 0 0; }
+.explication { font-size: 14px; line-height: 1.5; color: rgba(239,237,250,.86); margin: 10px 0 14px; }
+.suivante { all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: block; text-align: center; padding: 13px; border-radius: 14px; background: var(--portail); color: var(--encre); font: 800 15px/1 "Bricolage", sans-serif; box-shadow: 0 4px 0 #86C43F; }
+.panneau.rate .suivante { background: var(--rose); box-shadow: 0 4px 0 #D2508E; }
+.frimousse { width: 34px; height: 34px; flex: none; }
+.fin-demo { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 26px; background: radial-gradient(circle at 50% 35%, rgba(180,234,106,.18), transparent 60%), var(--fond); }
+.fin-demo.vue { display: flex; animation: entre .6s cubic-bezier(.2,.9,.25,1.1); }
+@keyframes entre { from { opacity: 0; transform: scale(.94); } }
+.fin-demo strong { font: 600 46px/1 "Fraunces", serif; color: var(--jaune); }
+.fin-demo p { color: var(--texte-doux); margin: 10px 0 22px; }
+.points-volants { position: absolute; font: 800 22px/1 "Bricolage", sans-serif; color: var(--jaune); pointer-events: none; animation: envole 1.1s ease-out forwards; }
+@keyframes envole { to { transform: translateY(-70px) scale(1.3); opacity: 0; } }
+.argument { display: grid; gap: 18px; }
+.argument div { display: flex; gap: 14px; align-items: flex-start; }
+.argument b { flex: none; width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; font: 600 13px/1 "Plex Mono", monospace; background: rgba(255,255,255,.07); color: var(--jaune); }
+.argument p { margin: 0; color: var(--texte-doux); }
+.argument strong { display: block; color: var(--texte); font: 800 18px/1.25 "Bricolage", sans-serif; margin-bottom: 2px; }
+
+/* ——— 4. Les systèmes ——— */
+.systemes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+.sys { position: relative; overflow: hidden; border-radius: 28px; padding: 30px; min-height: 360px; background: rgba(33,30,68,.55); border: 1px solid var(--ligne); isolation: isolate; transition: transform .4s cubic-bezier(.2,.7,.2,1), border-color .3s; }
+.sys:hover { transform: translateY(-6px); border-color: rgba(255,255,255,.22); }
+.sys::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(circle at 85% 30%, var(--lueur), transparent 60%); opacity: .55; }
+.sys .astre-sys { position: absolute; right: -40px; top: -30px; width: 260px; height: 260px; z-index: -1; animation: tourne var(--tour, 80s) linear infinite; }
+.sys .style-sys { font: 600 11px/1 "Plex Mono", monospace; letter-spacing: .18em; text-transform: uppercase; color: var(--lueur-texte); }
+.sys h3 { font: 600 34px/1.05 "Fraunces", serif; margin: 10px 0 6px; max-width: 10ch; }
+.sys p { color: var(--texte-doux); margin: 0 0 22px; max-width: 30ch; font-size: 16px; }
+.sys .mondes-sys { display: flex; flex-wrap: wrap; gap: 6px 4px; align-items: flex-end; }
+.sys .m { position: relative; width: 88px; text-align: center; }
+.sys .m img.h { width: 88px; height: 88px; display: block; transition: transform .3s cubic-bezier(.2,.9,.25,1.3); transform-origin: 50% 92%; }
+.sys .m:hover img.h { transform: scale(1.18) rotate(-3deg); }
+.sys .m span { display: block; font: 600 10px/1.2 "Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--texte-doux); margin-top: 2px; }
+
+/* ——— 5. Les ports ——— */
+.ports { display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 10px max(20px, calc((100vw - 1140px) / 2)) 26px; scroll-padding-inline: max(20px, calc((100vw - 1140px) / 2)); margin: 0; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.2) transparent; cursor: grab; }
+.ports.saisi { cursor: grabbing; scroll-snap-type: none; }
+.port { margin: 0; position: relative; flex: none; width: 240px; aspect-ratio: 480 / 860; border-radius: 22px; overflow: hidden; scroll-snap-align: start; box-shadow: 0 20px 50px rgba(0,0,0,.45); border: 1px solid var(--ligne); transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+.port:hover { transform: translateY(-8px) rotate(-.6deg); }
+.port > img.fond-port { width: 100%; height: 100%; object-fit: cover; display: block; user-select: none; -webkit-user-drag: none; }
+.port .h { position: absolute; left: 2%; width: 58%; transform: translateY(-92%); transform-origin: 50% 92%; animation: souffle 3.6s ease-in-out infinite; user-select: none; -webkit-user-drag: none; }
+.port .ombre-h { position: absolute; left: 12%; width: 38%; height: 10px; border-radius: 50%; background: rgba(10,8,24,.35); transform: translateY(-50%); }
+@keyframes souffle { 50% { scale: 1 1.02; rotate: -1deg; } }
+.port figcaption { position: absolute; left: 0; right: 0; top: 0; padding: 18px 16px 40px; background: linear-gradient(rgba(13,12,31,.85), transparent); }
+.port figcaption strong { display: block; font: 600 22px/1.1 "Fraunces", serif; }
+.port figcaption span { font: 600 10px/1 "Plex Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--texte-doux); }
+
+/* ——— 6. La Battle ——— */
+.battle { background: radial-gradient(60% 50% at 80% 20%, rgba(238,106,167,.18), transparent 70%), radial-gradient(50% 50% at 10% 90%, rgba(242,201,76,.10), transparent 70%); }
+.salle-demo { display: grid; grid-template-columns: 1.1fr .9fr; gap: 30px; align-items: start; }
+.table-joueurs { border-radius: 28px; padding: 26px; background: rgba(21,19,46,.8); border: 1px solid var(--ligne); box-shadow: 0 30px 80px rgba(0,0,0,.4); }
+.table-joueurs .q-en-cours { display: flex; justify-content: space-between; align-items: center; font: 600 12px/1 "Plex Mono", monospace; letter-spacing: .12em; color: var(--texte-doux); text-transform: uppercase; margin-bottom: 18px; }
+.table-joueurs .q-en-cours b { color: var(--jaune); font-size: 22px; letter-spacing: 0; }
+.joueurs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.joueur { text-align: center; }
+.joueur .av { position: relative; width: 74px; height: 74px; margin: 0 auto; border-radius: 50%; background: rgba(255,255,255,.06); border: 2px solid rgba(255,255,255,.12); display: grid; place-items: center; transition: border-color .3s, box-shadow .3s; }
+.joueur .av img { width: 64px; height: 64px; }
+.joueur.a-repondu .av { border-color: var(--portail); box-shadow: 0 0 24px rgba(180,234,106,.35); }
+.joueur.a-repondu .av::after { content: "✓"; position: absolute; right: -4px; bottom: -4px; width: 22px; height: 22px; border-radius: 50%; background: var(--portail); color: var(--encre); font: 800 13px/22px "Bricolage", sans-serif; animation: entre .4s cubic-bezier(.2,.9,.25,1.4); }
+.joueur span { display: block; font: 700 14px/1.2 "Figtree", sans-serif; margin-top: 8px; }
+.joueur small { font: 600 13px/1 "Plex Mono", monospace; color: var(--jaune); }
+.annonce { margin-top: 20px; padding: 12px 16px; border-radius: 14px; background: rgba(242,201,76,.08); border: 1px solid rgba(242,201,76,.25); font: 700 15px/1.35 "Figtree", sans-serif; min-height: 50px; transition: opacity .3s; }
+.formats { display: grid; gap: 14px; }
+.format { overflow: hidden; border-radius: 20px; padding: 18px 20px; background: rgba(33,30,68,.6); border: 1px solid var(--ligne); }
+.format .tete { display: flex; justify-content: space-between; align-items: baseline; }
+.format strong { font: 800 22px/1 "Bricolage", sans-serif; }
+.format small { font: 600 12px/1 "Plex Mono", monospace; color: var(--texte-doux); }
+.route { position: relative; height: 26px; margin-top: 12px; }
+.route::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 2px dashed rgba(255,255,255,.18); }
+.route i { position: absolute; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: rgba(255,255,255,.25); transition: background .2s, box-shadow .2s; }
+.route i.allumee { background: var(--jaune); box-shadow: 0 0 12px var(--jaune); }
+.route .vaisseau { position: absolute; top: 50%; left: 0; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50% 50% 50% 0; rotate: 45deg; background: var(--portail); box-shadow: 0 0 14px var(--portail); }
+.modes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+.modes span { padding: 10px 16px; border-radius: 999px; border: 1px solid var(--ligne); background: rgba(255,255,255,.04); font: 700 14px/1 "Figtree", sans-serif; }
+.modes span b { color: var(--jaune); font-weight: 700; }
+
+/* ——— 7. Le jeu qui se souvient ——— */
+.memoire { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.carte-m { border-radius: 24px; padding: 26px; background: rgba(33,30,68,.55); border: 1px solid var(--ligne); }
+.carte-m h3 { font: 800 21px/1.2 "Bricolage", sans-serif; margin: 0 0 8px; }
+.carte-m p { margin: 0; color: var(--texte-doux); font-size: 16px; }
+.frise-rev { display: flex; align-items: center; justify-content: space-between; margin: 6px 0 22px; position: relative; }
+.frise-rev::before { content: ""; position: absolute; left: 6px; right: 6px; top: 50%; border-top: 2px dotted rgba(255,255,255,.2); }
+.frise-rev span { position: relative; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--fond); border: 2px solid var(--violet); font: 600 12px/1 "Plex Mono", monospace; }
+.carte-m.vu .frise-rev span { animation: pop .5s cubic-bezier(.2,.9,.25,1.5) both; animation-delay: calc(var(--i) * .18s); }
+@keyframes pop { from { transform: scale(0); } }
+.confusion { display: flex; align-items: center; gap: 10px; margin: 6px 0 22px; font: 600 26px/1 "Fraunces", serif; }
+.confusion s { color: var(--rose); text-decoration-thickness: 3px; }
+.confusion em { font-style: normal; color: var(--portail); }
+.pastilles { display: flex; gap: 8px; margin: 10px 0 24px; }
+.pastilles i { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--jaune); }
+.pastilles i.on { background: var(--jaune); box-shadow: 0 0 14px rgba(242,201,76,.5); }
+
+/* ——— 8. Les chiffres ——— */
+.chiffres { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; text-align: center; }
+.chiffres strong { display: block; font: 600 clamp(48px, 7vw, 86px)/1 "Fraunces", serif; background: linear-gradient(180deg, #fff, var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.chiffres span { font: 600 12px/1.4 "Plex Mono", monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--texte-doux); }
+
+/* ——— 9. La parade ——— */
+.parade { overflow: hidden; padding: 30px 0 0; mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+.parade .piste { display: flex; gap: 6px; width: max-content; animation: defile 60s linear infinite; }
+.parade img { width: 150px; height: 150px; animation: sautille 2.4s ease-in-out infinite; animation-delay: calc(var(--i) * -.31s); transform-origin: 50% 92%; }
+@keyframes sautille { 0%, 100% { transform: translateY(0) rotate(-1.5deg); } 50% { transform: translateY(-10px) rotate(1.5deg); } }
+.final { text-align: center; }
+.final h2 { margin-inline: auto; max-width: 16ch; }
+.final .intro { margin-inline: auto; }
+
+@media (max-width: 900px) {
+  .ouverture .large { grid-template-columns: 1fr; padding-top: 90px; gap: 10px; }
+  .orrery { width: min(380px, 92vw); order: -1; margin-bottom: -20px; }
+  .jouer, .salle-demo { grid-template-columns: 1fr; }
+  .systemes, .memoire { grid-template-columns: 1fr; }
+  .chiffres { grid-template-columns: repeat(2, 1fr); gap: 34px 10px; }
+  .sys .m { width: 72px; } .sys .m img.h { width: 72px; height: 72px; }
+  .joueurs { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .joueur .av { width: 58px; height: 58px; } .joueur .av img { width: 50px; height: 50px; }
+  .port { width: 200px; }
+  .defiler { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apparait { opacity: 1; transform: none; }
+  .bandeau .piste, .parade .piste { animation: none; }
+}
