@@ -200,8 +200,8 @@ const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
     $(".panneau").classList.remove("ouvert");
     $(".fin-demo strong").textContent = total;
     $(".fin-demo p").textContent = justes === QUESTIONS.length
-      ? "Sans faute. Il y en a près de mille dans le jeu."
-      : `${justes} sur ${QUESTIONS.length}. Il y en a près de mille dans le jeu pour progresser.`;
+      ? "Sans faute. Il y en a des milliers dans le jeu."
+      : `${justes} sur ${QUESTIONS.length}. Il y en a des milliers dans le jeu pour progresser.`;
     $(".fin-demo").classList.add("vue");
   });
   $(".rejouer").addEventListener("click", () => { rang = 0; serie = 0; total = 0; justes = 0; $(".serie").textContent = ""; poser(); });
