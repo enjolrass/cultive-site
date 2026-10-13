@@ -49,12 +49,53 @@ const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
       f.x += f.v; f.y += f.v * 0.44; f.vie -= 0.02;
     }
     ctx.globalAlpha = 1;
-    // Le système suit la souris, un peu.
-    const orrery = document.querySelector(".orrery");
-    if (orrery) orrery.style.transform = `translate(${cam.x * 0.4}px, ${cam.y * 0.4}px)`;
     if (!calme) requestAnimationFrame(image);
   }
   requestAnimationFrame(image);
+})();
+
+/* ——— Le système de l'ouverture : des orbites vraies autour d'un trou noir fixe. ———
+   Chaque planète suit une ellipse aplatie comme le disque du trou noir, à sa
+   vitesse : la plus proche va le plus vite (troisième loi de Kepler). Sur la
+   moitié du haut, elle passe DERRIÈRE le trou noir — plus petite, plus sombre,
+   sous l'image ; sur la moitié du bas, elle passe DEVANT. Rien d'autre ne
+   bouge : le trou noir est une image fixe, seule l'étoile qu'il avale s'écoule. */
+(() => {
+  const systeme = document.querySelector(".orrery");
+  if (!systeme) return;
+  const orbes = [...systeme.querySelectorAll(".orbe")];
+  // Centre de l'ombre et orbites, dans le repère 1000 × 600 du système.
+  const CX = 499, CY = 293;
+  const ORBITES = [
+    { rx: 290, ry: 128, phase: 0.5 },
+    { rx: 355, ry: 150, phase: 2.6 },
+    { rx: 420, ry: 170, phase: 4.2 },
+    { rx: 478, ry: 188, phase: 5.6 },
+  ];
+  const PERIODE = 70; // secondes, pour l'orbite la plus proche
+  const INCLINAISON = -0.05; // le plan des orbites penche à peine
+  const debut = performance.now();
+  function placer(t) {
+    const l = systeme.clientWidth, echelle = l / 1000;
+    const taille = Math.max(30, l * 0.085);
+    orbes.forEach((o, i) => {
+      const orb = ORBITES[i % ORBITES.length];
+      const periode = PERIODE * Math.pow(orb.rx / ORBITES[0].rx, 1.5);
+      const a = orb.phase + (calme ? 0 : ((t - debut) / 1000) * (2 * Math.PI / periode));
+      const ex = orb.rx * Math.cos(a), ey = orb.ry * Math.sin(a);
+      const x = CX + ex * Math.cos(INCLINAISON) - ey * Math.sin(INCLINAISON);
+      const y = CY + ex * Math.sin(INCLINAISON) + ey * Math.cos(INCLINAISON);
+      const devant = Math.sin(a); // -1 tout au fond, 1 tout devant
+      const s = 0.72 + 0.34 * (devant + 1) / 2;
+      o.style.width = o.style.height = `${taille}px`;
+      o.style.margin = `${-taille / 2}px 0 0 ${-taille / 2}px`;
+      o.style.transform = `translate(${x * echelle}px, ${y * echelle}px) scale(${s.toFixed(3)})`;
+      o.style.zIndex = devant > 0 ? "4" : "1";
+      o.style.filter = `brightness(${(0.62 + 0.42 * (devant + 1) / 2).toFixed(3)})`;
+    });
+    if (!calme) requestAnimationFrame(placer);
+  }
+  requestAnimationFrame(placer);
 })();
 
 /* ——— Ce qui apparaît en défilant. ——— */

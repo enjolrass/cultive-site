@@ -33,10 +33,24 @@
       </div>
     </div>
     <div class="orrery" aria-hidden="true">
-      <div class="anneau" style="width:386.40000000000003px;height:147.20000000000002px"></div>
-      <div class="anneau" style="width:478.40000000000003px;height:184px"></div>
-      <div class="astre"><img src="images/astre-H.webp" alt=""></div>
-      <div class="orbe" style="--rx:193.20000000000002px;--ry:73.60000000000001px;--t:13s;--d:0s;--s:78px"><div><img src="images/planete-culture-populaire.webp" alt=""></div></div><div class="orbe" style="--rx:239.20000000000002px;--ry:92px;--t:10.5s;--d:-6s;--s:64px"><div><img src="images/planete-cinema.webp" alt=""></div></div><div class="orbe" style="--rx:154.56px;--ry:58.88px;--t:8s;--d:-11s;--s:52px"><div><img src="images/planete-sport.webp" alt=""></div></div><div class="orbe" style="--rx:220.8px;--ry:84.64px;--t:17s;--d:-17s;--s:70px"><div><img src="images/planete-bande-dessinee.webp" alt=""></div></div>
+      <svg class="flux" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="flux-degrade" x1="1" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#FFF6DC" stop-opacity="0.95"/>
+            <stop offset="0.5" stop-color="#FFB547" stop-opacity="0.7"/>
+            <stop offset="1" stop-color="#F2762E" stop-opacity="0"/>
+          </linearGradient>
+          <radialGradient id="etoile-lueur"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.25" stop-color="#FFF1C9"/><stop offset="1" stop-color="#FFB547" stop-opacity="0"/></radialGradient>
+        </defs>
+        <path class="filet halo" d="M 858 118 C 826 168, 772 222, 706 260 S 600 292, 552 296" />
+        <path class="filet coeur" d="M 858 118 C 826 168, 772 222, 706 260 S 600 292, 552 296" />
+        <path class="filet eclat" d="M 858 118 C 826 168, 772 222, 706 260 S 600 292, 552 296" />
+        <path class="filet eclat b" d="M 858 118 C 826 168, 772 222, 706 260 S 600 292, 552 296" />
+      </svg>
+      <svg class="orbites" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet"><ellipse cx="499" cy="293" rx="290" ry="128" transform="rotate(-2.86 499 293)"/><ellipse cx="499" cy="293" rx="355" ry="150" transform="rotate(-2.86 499 293)"/><ellipse cx="499" cy="293" rx="420" ry="170" transform="rotate(-2.86 499 293)"/><ellipse cx="499" cy="293" rx="478" ry="188" transform="rotate(-2.86 499 293)"/></svg>
+      <img class="trou-noir" src="images/trou-noir.webp" alt="">
+      <div class="etoile-avalee"></div>
+      <img class="orbe" data-monde="culture-populaire" src="images/planete-culture-populaire.webp" alt=""><img class="orbe" data-monde="cinema" src="images/planete-cinema.webp" alt=""><img class="orbe" data-monde="sport" src="images/planete-sport.webp" alt=""><img class="orbe" data-monde="bande-dessinee" src="images/planete-bande-dessinee.webp" alt="">
     </div>
   </div>
   <div class="defiler">Défiler</div>
@@ -106,7 +120,7 @@
       <div class="mondes-sys"><div class="m"><img class="h" src="images/habitant-sciences-vie-terre.webp" alt="Mme Carbone" loading="lazy"><span>Sciences</span></div><div class="m"><img class="h" src="images/habitant-langue-francaise.webp" alt="le Grammairien" loading="lazy"><span>Langue</span></div><div class="m"><img class="h" src="images/habitant-litterature.webp" alt="Six-Mains" loading="lazy"><span>Littérature</span></div></div>
     </article>
     <article class="sys apparait" style="--lueur:rgba(238,106,167,.55);--lueur-texte:#EE6AA7;--tour:50s;--retard:0.16s">
-      <img class="astre-sys" src="images/astre-H.webp" alt="">
+      <img class="astre-sys fixe" src="images/trou-noir.webp" alt="">
       <div class="style-sys">Néon années 80</div>
       <h3>Pop</h3>
       <p>Un trou noir qui avale une étoile : le cinéma, la BD, les jeux vidéo et le sport.</p>

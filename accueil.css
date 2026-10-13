@@ -31,21 +31,31 @@ body.accueil { background-attachment: scroll; overflow-x: hidden; }
 .defiler::after { content: ""; width: 1px; height: 34px; background: linear-gradient(var(--texte-doux), transparent); animation: goutte 1.8s ease-in-out infinite; transform-origin: top; }
 @keyframes goutte { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
 
-/* Le système de l'ouverture : un astre, des planètes en orbite elliptique.
-   L'ellipse vient de deux balancements décalés d'un quart de tour. */
-.orrery { position: relative; aspect-ratio: 1; width: min(560px, 100%); justify-self: center; transition: transform .4s cubic-bezier(.2,.7,.2,1); }
-.orrery .astre { position: absolute; inset: 22%; animation: tourne 60s linear infinite; filter: drop-shadow(0 0 60px rgba(238,106,167,.45)); }
-.orrery .astre img { width: 100%; height: 100%; }
+/* Le système de l'ouverture : un trou noir FIXE, et ce qui tourne autour.
+   Les planètes sont posées par accueil.js sur de vraies ellipses, dans le plan
+   du disque — aplaties comme lui. Derrière le trou noir, elles passent sous
+   l'image, plus petites et plus sombres ; devant, elles passent dessus. */
+.orrery { position: relative; width: min(860px, 125%); aspect-ratio: 1000 / 600; justify-self: center; margin-right: -12%; }
+.orrery .trou-noir { position: absolute; left: 4%; top: 6%; width: 92%; z-index: 2; pointer-events: none; filter: drop-shadow(0 0 50px rgba(255,170,70,.25)); }
+.orrery .orbe { position: absolute; left: 0; top: 0; width: 56px; height: 56px; margin: -28px 0 0 -28px; will-change: transform; }
+.orrery .orbites { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; overflow: visible; }
+.orrery .orbites ellipse { fill: none; stroke: rgba(255,214,160,.13); stroke-width: 1.2; }
+.orrery .flux { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; overflow: visible; }
+.orrery .filet { fill: none; stroke: url(#flux-degrade); stroke-linecap: round; }
+.orrery .filet.halo { stroke-width: 14; opacity: .35; filter: blur(6px); }
+.orrery .filet.coeur { stroke-width: 3.5; opacity: .9; }
+/* Des éclats glissent le long du flux vers le disque : une longue ombre, un trait bref. */
+.orrery .filet.eclat { stroke: #FFF6DC; stroke-width: 3; stroke-dasharray: 34 380; animation: s-ecoule 3.4s cubic-bezier(.5,0,.8,1) infinite; filter: blur(.4px) drop-shadow(0 0 6px #FFD27A); }
+.orrery .filet.eclat.b { animation-delay: -1.7s; stroke-width: 2; }
+@keyframes s-ecoule { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -414; } }
+.orrery .etoile-avalee { position: absolute; left: 85.8%; top: 19.7%; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; z-index: 3;
+  background: radial-gradient(circle, #fff 0 18%, #FFF1C9 30%, rgba(255,181,71,.55) 50%, transparent 72%);
+  animation: palpite 3.2s ease-in-out infinite; }
+.orrery .etoile-avalee::after { content: ""; position: absolute; inset: -40%; border-radius: 50%; background: radial-gradient(circle, rgba(255,214,140,.28), transparent 65%); }
+@keyframes palpite { 50% { transform: scale(.9) translate(-2px, 3px); filter: brightness(1.15); } }
+
 @keyframes tourne { to { transform: rotate(360deg); } }
-.orrery .anneau { position: absolute; left: 50%; top: 50%; border: 1px dashed rgba(255,255,255,.16); border-radius: 50%; transform: translate(-50%, -50%) rotate(-14deg); }
-.orbe { position: absolute; left: 50%; top: 50%; width: 0; height: 0; animation: va-x var(--t) ease-in-out infinite alternate; animation-delay: var(--d); }
-.orbe > div { animation: va-y var(--t) ease-in-out infinite alternate, profondeur calc(var(--t) * 2) linear infinite; animation-delay: calc(var(--d) - var(--t) / 2), calc(var(--d) * 2 - var(--t) / 2); }
-.orbe img { display: block; width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2); animation: tourne 30s linear infinite; }
-@keyframes va-x { from { transform: translateX(calc(var(--rx) * -1)); } to { transform: translateX(var(--rx)); } }
-@keyframes va-y { from { transform: translateY(calc(var(--ry) * -1)) rotate(-14deg); } to { transform: translateY(var(--ry)) rotate(-14deg); } }
-@keyframes profondeur { 0%, 100% { scale: .78; z-index: 0; filter: brightness(.7); } 50% { scale: 1.1; z-index: 3; filter: brightness(1.05); } }
-.orrery .astre { z-index: 1; }
-.orbe { z-index: 2; }
+.sys .astre-sys.fixe { animation: none; width: 330px; height: auto; right: -70px; top: 10px; }
 
 /* ——— 2. Le bandeau ——— */
 .bandeau { border-block: 1px solid var(--ligne); background: rgba(21,19,46,.6); overflow: hidden; padding: 16px 0; }
@@ -205,7 +215,7 @@ body.accueil { background-attachment: scroll; overflow-x: hidden; }
 
 @media (max-width: 900px) {
   .ouverture .large { grid-template-columns: 1fr; padding-top: 90px; gap: 10px; }
-  .orrery { width: min(380px, 92vw); order: -1; margin-bottom: -20px; }
+  .orrery { width: 100%; margin: 0 0 -10px; order: -1; }
   .jouer, .salle-demo { grid-template-columns: 1fr; }
   .systemes, .memoire { grid-template-columns: 1fr; }
   .chiffres { grid-template-columns: repeat(2, 1fr); gap: 34px 10px; }
