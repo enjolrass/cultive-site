@@ -235,3 +235,120 @@ body.accueil { background-attachment: scroll; overflow-x: hidden; }
   .apparait { opacity: 1; transform: none; }
   .bandeau .piste, .parade .piste { animation: none; }
 }
+
+/* ——— L'écran de question immersif (30/10/2026 dans l'app) ———
+   L'image du sujet fait le fond du haut de l'écran ; ancrés en bas, la question
+   sur un panneau sombre, puis les quatre réponses en deux sur deux. */
+.telephone.immersif .ecran { padding: 46px 14px 16px; background: var(--fond-bas); }
+.telephone.immersif .haut-jeu { position: relative; z-index: 2; }
+.telephone.immersif .tuile { position: absolute; inset: 0 0 auto 0; height: 66%; margin: 0; border: 0; border-radius: 0; background: #0D0C1F; z-index: 0; }
+.telephone.immersif .tuile::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13,12,31,.55) 0%, transparent 22%, transparent 55%, var(--fond-bas) 100%); pointer-events: none; }
+.telephone.immersif .tuile img { animation: net .9s ease both; }
+@keyframes net { from { filter: blur(14px); transform: scale(1.06); } }
+.telephone.immersif .tuile .credit { top: 92px; bottom: auto; right: 10px; z-index: 1; }
+.telephone.immersif .serie { position: relative; z-index: 2; align-self: flex-end; margin-top: 6px; }
+.telephone.immersif .carte-q { position: relative; z-index: 2; margin-top: auto; padding: 14px 16px 12px; border-radius: 20px; background: rgba(13,12,31,.92); border: 1px solid var(--ligne); }
+.telephone.immersif .monde-q { margin: 0 0 6px; color: var(--portail); }
+.telephone.immersif .monde-q img { width: 22px; height: 22px; }
+.telephone.immersif .enonce { margin: 0; min-height: 0; font-size: 19px; }
+.telephone.immersif .choix { position: relative; z-index: 2; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.telephone.immersif .choix button { flex-direction: column; align-items: flex-start; gap: 6px; padding: 10px 11px; min-height: 76px; font-size: 14px; border-radius: 14px; background: rgba(33,30,68,.96); }
+.telephone.immersif .choix button b { width: 22px; height: 22px; border-radius: 7px; font-size: 11px; }
+.telephone.immersif .choix button.touche { border-color: var(--cyan); }
+.telephone.immersif .panneau { z-index: 3; }
+
+/* ——— Les mondes à ouvrir ——— */
+.deblocage { margin-top: 26px; display: grid; grid-template-columns: .9fr 1.1fr; gap: 30px; align-items: center; border-radius: 28px; padding: 30px; background: rgba(21,19,46,.7); border: 1px solid var(--ligne); }
+.deblocage h3 { font: 600 30px/1.08 "Fraunces", serif; margin: 10px 0 10px; }
+.deblocage p { color: var(--texte-doux); margin: 0; }
+.ciel-mondes { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px 6px; }
+.ciel-mondes .mo { text-align: center; }
+.ciel-mondes img { width: 54px; height: 54px; display: block; margin: 0 auto; filter: grayscale(1) brightness(.35); opacity: .7; transition: filter .6s, transform .6s; }
+.ciel-mondes span { display: block; font: 600 9px/1.2 "Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: rgba(239,237,250,.35); margin-top: 4px; }
+.ciel-mondes .ouvert img { filter: drop-shadow(0 0 14px rgba(180,234,106,.45)); opacity: 1; }
+.ciel-mondes .ouvert span { color: var(--portail); }
+.deblocage.vu .ciel-mondes .mo:not(.ouvert) img { animation: allume 9s ease-in-out infinite; animation-delay: calc(var(--k, 0) * 1s); }
+@keyframes allume { 0%, 70%, 100% { filter: grayscale(1) brightness(.35); } 80%, 90% { filter: none; opacity: 1; } }
+
+/* ——— Le duel ——— */
+.duel { margin-top: 36px; display: grid; grid-template-columns: .9fr 1.1fr; gap: 30px; align-items: center; border-radius: 28px; padding: 30px; background: rgba(21,19,46,.8); border: 1px solid var(--ligne); }
+.duel h3 { font: 600 30px/1.08 "Fraunces", serif; margin: 10px 0 10px; }
+.duel p { color: var(--texte-doux); margin: 0; }
+.manches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.manche { text-align: center; padding: 18px 8px; border-radius: 20px; background: rgba(33,30,68,.6); border: 1px solid var(--ligne); }
+.manche img, .manche .mystere { width: 74px; height: 74px; display: block; margin: 0 auto 10px; }
+.manche .mystere { border-radius: 50%; display: grid; place-items: center; font: 600 40px/1 "Fraunces", serif; color: var(--jaune); background: radial-gradient(circle at 35% 30%, rgba(242,201,76,.35), rgba(143,134,242,.25) 60%, rgba(21,19,46,.9)); border: 1px dashed rgba(242,201,76,.6); animation: tourne 14s linear infinite; }
+.manche b { display: block; font: 600 11px/1 "Plex Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--texte-doux); }
+.manche span { display: block; font: 800 16px/1.2 "Bricolage", sans-serif; margin-top: 6px; }
+
+/* ——— Les pouvoirs ——— */
+.pouvoirs-bloc { background: radial-gradient(50% 50% at 85% 60%, rgba(242,201,76,.14), transparent 70%); }
+.arsenal { display: grid; grid-template-columns: 1.25fr .75fr; gap: 24px; align-items: stretch; }
+.familles { display: grid; gap: 16px; }
+.famille { border-radius: 24px; padding: 20px 22px; background: rgba(33,30,68,.55); border: 1px solid var(--ligne); display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 18px; }
+.famille .surtitre { grid-column: 1 / -1; }
+.famille.protege .surtitre { color: var(--cyan); }
+.famille.attaque .surtitre { color: var(--rose); }
+.pouvoir { display: flex; align-items: center; gap: 12px; }
+.pouvoir img { flex: none; width: 58px; height: 58px; object-fit: contain; transition: transform .3s cubic-bezier(.2,.9,.25,1.4); }
+.pouvoir:hover img { transform: scale(1.15) rotate(-6deg); }
+.pouvoir p { margin: 0; color: var(--texte-doux); font-size: 14px; line-height: 1.35; }
+.pouvoir strong { display: block; color: var(--texte); font: 800 16px/1.2 "Bricolage", sans-serif; }
+.athena { position: relative; overflow: hidden; border-radius: 28px; padding: 26px; text-align: center; background: radial-gradient(circle at 50% 30%, rgba(255,233,168,.28), transparent 60%), rgba(21,19,46,.85); border: 1px solid rgba(242,201,76,.35); }
+.athena .statue { width: 150px; margin: 0 auto 10px; filter: drop-shadow(0 0 30px rgba(242,201,76,.45)); }
+.athena .statue svg { width: 100%; height: auto; display: block; overflow: visible; }
+.athena .bouclier-g { transform-box: fill-box; transform-origin: 50% 50%; }
+.athena.vu .bouclier-g { animation: egide 4.5s cubic-bezier(.2,.9,.25,1.2) infinite; }
+@keyframes egide { 0%, 55%, 100% { transform: none; } 65%, 85% { transform: translate(-22px, -40px) scale(1.18); } }
+.athena h3 { font: 600 28px/1.1 "Fraunces", serif; margin: 10px 0 10px; color: #FFE9A8; }
+.athena p { margin: 0; color: var(--texte-doux); font-size: 16px; }
+.athena strong { color: #FFE9A8; }
+
+/* ——— L'avant-poste ——— */
+.ap { display: grid; grid-template-columns: 1.15fr .85fr; gap: 40px; align-items: center; }
+.choix-galaxie { display: flex; flex-wrap: wrap; gap: 8px; margin: -16px 0 18px; }
+.choix-galaxie button { all: unset; cursor: pointer; padding: 9px 14px; border-radius: 999px; border: 1px solid var(--ligne); background: rgba(255,255,255,.04); font: 700 14px/1 "Figtree", sans-serif; color: var(--texte-doux); transition: background .2s, color .2s, border-color .2s; }
+.choix-galaxie button[aria-pressed="true"] { background: rgba(180,234,106,.14); border-color: var(--portail); color: var(--texte); }
+.choix-galaxie button:focus-visible { outline: 2px solid var(--portail); outline-offset: 2px; }
+.vitrine-crans { position: relative; height: 250px; }
+.crans { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; align-items: end; opacity: 0; pointer-events: none; transition: opacity .5s; }
+.crans.actif { opacity: 1; pointer-events: auto; }
+.crans figure { margin: 0; text-align: center; }
+.crans img { width: 100%; height: calc(140px + var(--n) * 30px); object-fit: contain; object-position: bottom; display: block; }
+.crans.actif img { animation: pousse .7s cubic-bezier(.2,.9,.25,1.3) both; animation-delay: calc(var(--n) * .12s); transform-origin: 50% 100%; }
+@keyframes pousse { from { transform: scale(.6) translateY(20px); opacity: 0; } }
+.crans figcaption { font: 600 10px/1.2 "Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--texte-doux); margin-top: 8px; }
+.rocher { justify-self: center; width: min(420px, 100%); }
+.rocher img { width: 100%; display: block; -webkit-mask-image: radial-gradient(ellipse 72% 70% at 50% 46%, #000 60%, transparent 100%); mask-image: radial-gradient(ellipse 72% 70% at 50% 46%, #000 60%, transparent 100%); animation: flotte-r 7s ease-in-out infinite; filter: drop-shadow(0 30px 60px rgba(0,0,0,.5)); }
+@keyframes flotte-r { 50% { transform: translateY(-14px) rotate(.6deg); } }
+
+/* ——— Le Bazar ——— */
+.bazar-tete { display: grid; grid-template-columns: 1.1fr .9fr; gap: 36px; align-items: center; margin-bottom: 30px; }
+.bazar-tete .intro { margin-bottom: 18px; }
+.sans-argent { margin: 0; padding: 16px 18px; border-radius: 18px; background: rgba(180,234,106,.08); border: 1px solid rgba(180,234,106,.35); color: var(--texte-doux); max-width: 52ch; }
+.sans-argent strong { color: var(--portail); }
+.marchand { width: 100%; border-radius: 26px; border: 1px solid var(--ligne); box-shadow: 0 30px 70px rgba(0,0,0,.5); }
+.rayons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.rayon { border-radius: 24px; padding: 22px; background: rgba(33,30,68,.55); border: 1px solid var(--ligne); }
+.rayon h3 { font: 800 21px/1.2 "Bricolage", sans-serif; margin: 14px 0 4px; }
+.rayon p { margin: 0; color: var(--texte-doux); font-size: 15px; }
+.objets { display: flex; gap: 8px; align-items: flex-end; justify-content: space-around; min-height: 120px; }
+.objets figure { margin: 0; flex: 1; text-align: center; }
+.objets img { width: 100%; max-width: 110px; height: 96px; object-fit: contain; display: block; margin: 0 auto; transition: transform .3s cubic-bezier(.2,.9,.25,1.4); }
+.objets figure:hover img { transform: translateY(-6px) rotate(-4deg); }
+.objets figcaption { font: 600 9px/1.25 "Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--texte-doux); margin-top: 6px; }
+
+@media (max-width: 900px) {
+  .deblocage, .duel, .arsenal, .ap, .bazar-tete { grid-template-columns: 1fr; padding: 22px; }
+  .arsenal, .bazar-tete { padding: 0; }
+  .ap { padding: 0 20px; gap: 30px; }
+  .ciel-mondes img { width: 44px; height: 44px; }
+  .rayons { grid-template-columns: 1fr; }
+  .famille { grid-template-columns: 1fr; }
+  .vitrine-crans { height: 190px; }
+  .crans img { height: calc(100px + var(--n) * 22px); }
+  .choix-galaxie { margin-top: -20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ciel-mondes img, .athena .bouclier-g, .rocher img, .manche .mystere, .crans img, .telephone.immersif .tuile img { animation: none !important; }
+}

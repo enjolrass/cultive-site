@@ -116,15 +116,15 @@ const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const QUESTIONS = [
     { monde: "Peinture", planete: "arts-visuels", enonce: "Qui a peint « La Jeune Fille à la perle » ?",
       juste: "Johannes Vermeer", faux: ["Rembrandt", "Frans Hals", "Pieter de Hooch"],
-      image: "demo-vermeer", credit: "Johannes Vermeer, vers 1665 · domaine public",
+      image: "demo-vermeer", licence: "domaine public", credit: "Johannes Vermeer, vers 1665 · domaine public",
       explication: "Oublié pendant près de deux siècles, le tableau ressurgit en 1881 dans une vente publique à La Haye, où un collectionneur l'emporta pour à peine deux florins." },
     { monde: "Géographie", planete: "geographie-monde", enonce: "Dans quel pays se trouve le Machu Picchu ?",
       juste: "Pérou", faux: ["Bolivie", "Équateur", "Colombie"],
-      image: "demo-machu", credit: "Photo Martin St-Amant · CC BY-SA 3.0", lien: "https://commons.wikimedia.org/wiki/File:80_-_Machu_Picchu_-_Juin_2009_-_edit.jpg",
+      image: "demo-machu", licence: "CC BY-SA 3.0", credit: "Photo Martin St-Amant · CC BY-SA 3.0", lien: "https://commons.wikimedia.org/wiki/File:80_-_Machu_Picchu_-_Juin_2009_-_edit.jpg",
       explication: "Bâti vers 1450 pour l'empereur inca Pachacútec, à plus de 2 400 mètres d'altitude, le site reste inconnu du monde occidental jusqu'en 1911." },
     { monde: "Jeux vidéo", planete: "culture-populaire", enonce: "En quelle année sort la Game Boy au Japon ?",
       juste: "1989", faux: ["1985", "1992", "1995"],
-      image: "demo-gameboy", credit: "Photo Evan-Amos · domaine public",
+      image: "demo-gameboy", licence: "domaine public", credit: "Photo Evan-Amos · domaine public",
       explication: "Sa console tient sur 4 piles AA, théoriquement au moins dix heures." },
   ];
   const BRAVO = ["Bravo !", "Excellent !", "Époustouflant !"];
@@ -151,7 +151,10 @@ const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
     tuile.querySelector("img").src = `images/${q.image}.webp`;
     tuile.querySelector("img").alt = "";
     const credit = tuile.querySelector(".credit");
-    credit.textContent = q.credit;
+    // Sur l'écran de question, le crédit dit la licence, jamais l'auteur :
+    // sur « Qui a peint… », l'auteur est la réponse. L'attribution entière
+    // arrive avec la correction.
+    credit.textContent = q.licence;
     if (q.lien) credit.href = q.lien; else credit.removeAttribute("href");
     $(".enonce").textContent = q.enonce;
     $(".progres i").style.width = `${(rang / QUESTIONS.length) * 100}%`;
@@ -183,6 +186,7 @@ const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
     $(".reponse-dite").innerHTML = bon ? "" : `La réponse : <strong></strong>`;
     if (!bon) $(".reponse-dite strong").textContent = q.juste;
     $(".explication").textContent = q.explication;
+    $(".tuile .credit").textContent = q.credit;
     $(".serie").textContent = serie >= 2 ? `SÉRIE ×${serie}` : "";
     $(".suivante").textContent = rang === QUESTIONS.length - 1 ? "Voir mon score" : "Suivante";
     panneau.classList.add("ouvert");
@@ -288,4 +292,26 @@ const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
   ports.addEventListener("pointerdown", (e) => { if (e.pointerType !== "mouse") return; x0 = e.clientX; s0 = ports.scrollLeft; ports.classList.add("saisi"); });
   addEventListener("pointermove", (e) => { if (x0 !== null) ports.scrollLeft = s0 - (e.clientX - x0); });
   addEventListener("pointerup", () => { x0 = null; ports.classList.remove("saisi"); });
+})();
+
+/* ——— L'avant-poste : les quatre crans d'un bâtiment, galaxie par galaxie. ———
+   On touche une galaxie pour la voir ; sinon elles défilent seules, lentement. */
+(() => {
+  const boutons = [...document.querySelectorAll(".choix-galaxie button")];
+  const series = [...document.querySelectorAll(".crans")];
+  if (!boutons.length) return;
+  let rang = 0, minuterie = null;
+  function montrer(i) {
+    rang = i;
+    boutons.forEach((b, k) => b.setAttribute("aria-pressed", String(k === i)));
+    series.forEach((s, k) => s.classList.toggle("actif", k === i));
+  }
+  boutons.forEach((b, i) => b.addEventListener("click", () => { clearInterval(minuterie); minuterie = null; montrer(i); }));
+  if (calme) return;
+  const vitrine = document.querySelector(".vitrine-crans");
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting && minuterie === null && !vitrine.dataset.touche) minuterie = setInterval(() => montrer((rang + 1) % series.length), 4200);
+    else if (!e.isIntersecting && minuterie) { clearInterval(minuterie); minuterie = null; }
+  }, { threshold: 0.4 }).observe(vitrine);
+  boutons.forEach((b) => b.addEventListener("click", () => { vitrine.dataset.touche = "1"; }));
 })();
